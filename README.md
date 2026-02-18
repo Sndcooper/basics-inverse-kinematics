@@ -1,49 +1,49 @@
-# Basics of Inverse Kinematics
+# Basics Inverse Kinematics - Hexapod Robot
 
-This repo is a compact study notebook for planar 2-link inverse kinematics (IK). It includes a small script to compute angles for a target point, a slider GUI to explore targets and link lengths interactively, and a scratch notebook where equations and plots were tested.
+This project contains the codebase for simulating, controlling, and analyzing the inverse kinematics (IK) and gait generation for a 6-legged (hexapod) robot. The project covers everything from low-level geometric calculations and single-leg simulations to full robot gait coordination and Arduino firmware for hardware control.
 
-## Files
-- inverse_kinematics.py: compute angles for a target and plot the arm
-- ik_gui.py: interactive sliders for X, Y, L1, L2 with live angle readout
-- basicsik.ipynb: scratch notebook experiments
+## Project Structure
 
-## Run
-```bash
-python inverse_kinematics.py
-python ik_gui.py
-```
+The project is organized into the following main directories:
 
-## Math Summary (2-Link Planar)
-Given link lengths L1 and L2 and a target point (x, y):
+- **`basics inverse kinematics/` (Root)**: Contains core IK solvers, visualization tools, and main simulation scripts.
+- **`connectingjupyter/`**: Scripts and notebooks related to connecting simulations with Jupyter, gait generation, and serial communication with the robot.
+- **`firmware/`**: PlatformIO project for the Arduino-based firmware (likely ATmega328P/Uno) controlling the servos via PCA9685 drivers.
+- **`hexabot one leg simulation/`**: Dedicated tools for analyzing and simulating the movement of a single leg.
+- **`hexabot positions/`**: Scripts for calculating and visualizing specific static poses and leg configurations.
 
-- Distance to target: r = sqrt(x^2 + y^2)
-- Reachable if |L1 - L2| <= r <= L1 + L2
-- Elbow angle:
-	- cos(theta2) = (r^2 - L1^2 - L2^2) / (2 L1 L2)
-- Shoulder angle:
-	- phi = atan2(y, x)
-	- psi = atan2(L2 sin(theta2), L1 + L2 cos(theta2))
-	- theta1 = phi - psi
+## Root Directory Files
 
-Elbow-up vs elbow-down is handled by the sign of theta2.
+Here is a guide to the key files in this directory:
 
-## What The GUI Shows
-- Arm pose for the current sliders
-- Red target point
-- Outer reach circle: L1 + L2
-- Inner reach circle: |L1 - L2|
-- Angle readouts in radians and degrees
+### Core Kinematics & Simulation
+- **`hexabot_sim.py`**: The main simulation script for the hexapod. It visualizes the 3D kinematics of the robot, handles IK calculations for all legs, and can export joint angles/coordinates.
+- **`calculate_joints.py`**: A dedicated script for calculating joint angles given target coordinates. It implements the geometric IK math.
+- **`find_valid_pose.py`**: A utility to sweep through potential coordinates (Z-heights, X-radii) to find valid, reachable workspace configurations given the physical servo limits.
+- **`ik_gui.py`**: A graphical user interface (using Matplotlib widgets) to interactively play with the IK parameters (X, Y, L1, L2) and visualize the resulting arm/leg pose.
+- **`inverse_kinematics.py`**: Contains helper functions and classes for the IK logic.
+- **`ik simulation hexanbot.cpp`**: A C++ implementation of the IK logic, likely used for reference or porting to the firmware.
 
-## Tips
-- If the target is unreachable, move the target inside the outer circle and outside the inner circle.
-- If the arm flips the other way, negate theta2 to switch elbow configuration.
-- Use small slider steps to avoid jitter near the reach limits.
+### Notebooks & Data
+- **`basicsik.ipynb`**: A Jupyter notebook for experimenting with basic IK concepts and converting 3D coordinates to servo angles.
+- **`joint_positions.txt`**: Generated output file containing calculated joint angles for specific poses.
+- **`exported_coordinates.txt` / `exported_poses.txt`**: Output files from simulations used for debugging or importing into other tools.
 
-## Troubleshooting
-- If a plot window hangs, close it and run the script again.
-- If you see invalid value warnings for acos, the target is unreachable or numeric rounding pushed the cosine outside [-1, 1].
+## Getting Started
 
-## Next Ideas
-- Add joint limits and enforce them in IK
-- Add a third link or a wrist angle
-- Animate a path instead of a single target
+1.  **Dependencies**: Ensure you have Python installed along with `numpy` and `matplotlib`.
+2.  **Run Simulation**:
+    ```bash
+    python hexabot_sim.py
+    ```
+    This will open a 3D plot showing the robot's configuration.
+3.  **Check Reachability**:
+    ```bash
+    python find_valid_pose.py
+    ```
+    Use this to determine the optimal body height and stride length for your specific servo limits.
+
+## Key Concepts
+- **Inverse Kinematics (IK)**: Calculating the required joint angles (Coxa, Femur, Tibia) to place the foot tip at a specific (X, Y, Z) coordinate.
+- **Forward Kinematics (FK)**: Calculating the foot tip position based on the current joint angles.
+- **Coordinate System**: Typically, the robot body center is (0,0,0). Leg coordinates are often computed in a local frame relative to the hip and then transformed to the global body frame.
