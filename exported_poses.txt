@@ -1,0 +1,10 @@
+# Exported Joint Angles (Degrees)
+# Target Local Z: -150.0
+# Target Global Stride: +-40.0 in X (Parallel)
+# Format: Leg_Index: [Base_Yaw, Angle1, Angle2, Angle3]
+Leg 0: [0.00, 0.00, -46.38, -70.59]
+Leg 1: [49.11, 0.00, -33.22, -69.99]
+Leg 2: [26.33, 0.00, -29.45, -59.39]
+Leg 3: [0.00, 0.00, -30.48, -52.52]
+Leg 4: [-26.33, 0.00, -29.45, -59.39]
+Leg 5: [-49.11, 0.00, -33.22, -69.99]

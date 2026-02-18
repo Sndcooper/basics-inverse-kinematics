@@ -1,0 +1,4 @@
+# Exported Joint Angles (Degrees)
+# Target Local: (60.0, 0.0, -170.0)
+# Format: Leg_Index: [Base_Yaw, Angle1, Angle2, Angle3]
+Leg 0: [0.00, -5.14, -48.11, -36.75]
